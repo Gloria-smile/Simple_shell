@@ -46,10 +46,7 @@ The project is organized as follows:
 
 ```
 .
-├── AUTHORS
 ├── README.md
-├── LICENSE
-├── CODE_OF_CONDUCT.md
 ├── simple_shell.1 (man page)
 ├── shell.h
 ├── main.c
@@ -81,8 +78,6 @@ The project is organized as follows:
  
 ```
 
-
-`AUTHORS` file lists the contributors to the project. 
 
 `README.md` file you are currently reading is a brief overview of the project. 
 
