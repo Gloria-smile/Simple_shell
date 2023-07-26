@@ -239,11 +239,3 @@ Once you have created the `simple_shell.1.md` file, run the following command to
 This will create a new file called `simple_shell.1`. You can view the man page by running the following command:
 
 `man ./simple_shell.1`
-
-## AUTHORS
-
-This program was written by `FourtyThree43` and `Kemboiray`.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
