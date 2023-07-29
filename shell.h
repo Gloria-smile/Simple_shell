@@ -1,96 +1,90 @@
-#ifndef _SHELL_H_
-#define _SHELL_H_
-#define _GNU_SOURCE
+#ifndef SHELL_H
+#define SHELL_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 #include <sys/stat.h>
 #include <limits.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <stdarg.h>
-#include <ctype.h>
+#include <dirent.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <stdio.h>
+#include <stdlib.h>
+#define PATH_FOUND 1
+#define PATH_NOT_FOUND 0
+#define _GNU_SOURCE
 
-/*macros*/
-#define PATH_MAX_LENGTH 4096
-#define PATH_SEPARATOR ":"
-#define PROMPT "$ "
-#define MAX_TOKENS 1024
-#define BUFFER_SIZE 1024
+int handle_command(char *command, char *envp[]);
 
-/* prompt.c */
-void prompt(void);
+void handle_input(char *input, char *envp[]);
 
-/* get_input.c */
-char *get_input(void);
-void free_last_input(void);
-/* get_line.c*/
-void *get_line(void);
+#define PIPELINE_MAX_COMMANDS 2
+#define MAX_COMMANDS 10
 
-/* built-in funcs */
-int check_for_builtin(char **args);
-int execute_buitlin(char *cmd, char **args);
-void shell_help(void);
-void shell_exit(char **args);
-void shell_cd(char **args);
-int shell_setenv(char **args);
-int shell_unsetenv(char **args);
-int shell_env(void);
-int shell_clear(char **args);
+char **parse_pipeline_commands(char *pipeline, int *num_commands);
 
-/* signal_handler.c */
-void handle_sigint(int sig);
-void handle_sigquit(int sig);
-void handle_sigstp(int sig);
+int my_pipline_handler(char *pipeline, char *envp[]);
 
-/* execute.c */
-int execute(char **args);
+void handle_error(const char *message);
 
-/* parser.c */
-char **tokenize(char *str, const char *delim);
-char **tokenize_input(char *input);
+void do_hard_things(void);
 
-/* get_env.c */
-char *_getenv(const char *name);
+pid_t create_my_child(int *myinput_fd);
 
-/* get_path.c */
-char *get_path(void);
+void command_execution(char *my_cmd);
 
-/* find_in_path.c */
-char *find_in_path(char *command);
+int sys_cust(char *my_cmd, int in_fd);
 
-/* free.c */
-void free_error(char **argv, char *arg);
-void free_tokens(char **ptr);
-void free_path(void);
+int wait_for_my_child(pid_t my_child);
 
-/* error.c */
-void _puts(char *str);
-void _puterror(char *err);
+int create_pipes(int pipefd[][2], int num_pipes);
 
-/* utils_funcs1.c */
-int _strlen(const char *);
-int _strcmp(const char *s1, const char *s2);
-int _strncmp(const char *s1, const char *s2, size_t n);
-char *_strstr(char *haystack, char *needle);
-char *_strchr(char *s, char c);
+void free_commands(char *commands[], int num_commands);
 
-/* utils_funcs2.c */
-char *_strcpy(char *, char *);
-char *_strcat(char *, const char *);
-char *_strdup(const char *);
-int _putchar(char);
-unsigned int _strspn(char *s, char *accept);
+void execute_commands(char *commands[], int num_commands,
+		int pipefd[][2], char *envp[]);
 
-/* utils_funcs3.c */
-int _atoi(const char *str);
-char *_memset(char *, char, unsigned int);
-char *_memcpy(char *dest, char *src, unsigned int n);
-void *_realloc(void *, unsigned int, unsigned int);
-void *_calloc(unsigned int nmemb, unsigned int size);
+void close_pipes(int pipefd[][2], int num_pipes);
+
+void wait_for_children(int num_commands);
+
+int run_shell(char *pipeline, char *envp[]);
+
+char *my_substr(char *sentence, char *word);
+
+pid_t fork_execute_function(char **array_string, char *env[]);
+
+char **string_tokenization(char *str);
+
+int my_strcmp(const char *string1, const char *string2);
+
+char *my_dubler(char *str);
+
+int my_strlen(char *str);
+
+int path_check_function(char *final_string);
+
+char *file_check(char *final_string);
+
+ssize_t read_input(char **line_input, size_t *size_input);
+
+char *my_strcpy(char *to, char *from);
+
+int check_build_in_func(char *final_string, char *envp[]);
+
+char *my_strcat(const char *str1, const char *str2);
+
+int my_env(void);
+
+void my_exit(char **argument);
+
+int my_atoi(char *my_string);
+
+void handle_non_terminal_input(void);
+
+extern char **environ;
+
 
 #endif
